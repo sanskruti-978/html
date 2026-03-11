@@ -16,16 +16,17 @@ let recognition;
 
     recognition.continuous = true;
 
-    recognition.interimResult = true;
+    recognition.interimResults = true;
 
     recognition.lang = 'en-US';
 
-    recognition.onresults = function(event){
+    recognition.onresult = function(event){
 
-        / / processResult()
-
-
+      const {finalTranscript, interTranscript } =
       processResult(event.results);
+
+      resultElement.innerHTML = finalTranscript + 
+      interTranscript;
 
     }
 
@@ -35,32 +36,35 @@ let recognition;
   function processResult(results){
 
 
-    let finalTransmit = '';
-    let interTransmit = '';
+    let finalTranscript = '';
+    let interTranscript = '';
 
     for (let i = 0; i < results.length; i++){
 
 
       let transcript = results[i][0].transcript;
-      transcript.replace("\n","<br>");
+      transcript = transcript.replace("\n","<br>");
 
       if(results[i].isFinal){
 
-        finalTranscript += transcript
+        finalTranscript += transcript;
+
+      }else{
+
+        interTranscript += transcript;
+
       }
 
     }
 
+    return{finalTranscript, interTranscript}
+
   }
 
-
-
-
-
-
-
-
-
   function stopConverting(){
+    if(recognition){
 
+      recognition.stop();
+
+    }
   }
